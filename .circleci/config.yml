@@ -31,10 +31,8 @@ jobs:
       - run:
           name: Create hub key
           command: |
-            echo 'make hub key'
-            mkdir keys
+            echo 'make hub key'            
             openssl enc -aes-256-cbc -nosalt -d -K $dkey -iv $div  -in assets/server.key.enc -out assets/server.key
-            openssl rsa -in keys/hub.key -check -noout
           ### Uncomment the following if performing deployments
           #- echo 'make deploy key'
           #- echo $DEPLOY_SERVER_KEY_HEX | xxd -r -ps >> keys/deploy.key
@@ -44,7 +42,7 @@ jobs:
           name: Setup Org
           command: |
             echo 'Running tests'
-            sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile keys/hub.key --username $USERNAME --setdefaultdevhubusername -a hub
+            sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile assets/server.key --username $USERNAME --setdefaultdevhubusername -a hub
             sfdx force --help
             sfdx force:org:create -s -f ~/ci_app/config/project-scratch-def.json -a circle_build_$CIRCLE_BUILD_NUM --wait 2
             sfdx force:source:push -u circle_build_$CIRCLE_BUILD_NUM
