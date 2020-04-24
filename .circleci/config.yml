@@ -33,7 +33,7 @@ jobs:
           command: |
             echo 'make hub key'
             mkdir keys
-            echo $SFDX_JWT_KEY | xxd -r -ps >> keys/hub.key
+            openssl enc -aes-256-cbc -nosalt -d -K $dkey -iv $div  -in assets/server.key.enc -out assets/server.key
             openssl rsa -in keys/hub.key -check -noout
           ### Uncomment the following if performing deployments
           #- echo 'make deploy key'
